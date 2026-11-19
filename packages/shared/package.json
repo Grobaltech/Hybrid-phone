@@ -1,0 +1,14 @@
+{
+  "name": "@hybrid/shared",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": {
+      "types": "./index.ts",
+      "import": "./index.ts"
+    }
+  }
+}

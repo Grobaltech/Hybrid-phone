@@ -10,7 +10,8 @@
     "dev:web": "npm run dev -w apps/web",
     "dev:api": "npm run dev -w apps/api",
     "build": "npm run build -w apps/web && npm run build -w apps/api",
-    "typecheck": "npm run typecheck -w apps/web && npm run typecheck -w apps/api"
+    "typecheck": "npm run typecheck -w apps/web && npm run typecheck -w apps/api",
+    "deploy": "npm run deploy -w apps/api"
   },
   "engines": {
     "node": ">=20"

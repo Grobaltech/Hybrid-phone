@@ -10,7 +10,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@hybrid/shared": "*",
     "@supabase/supabase-js": "^2.45.0",
     "hono": "^4.6.0"
   },

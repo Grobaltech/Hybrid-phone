@@ -15,7 +15,11 @@ const latestPayments = computed(() => rows.value.flatMap(creditor =>
   (creditor.creditor_payments ?? []).map((payment: any) => ({ ...payment, creditorName: creditor.name, creditorId: creditor.id }))
 ).sort((a, b) => new Date(b.paid_at).getTime() - new Date(a.paid_at).getTime()).slice(0, 50))
 
-function recentPayments(row: any) {\n  return [...(row.creditor_payments ?? [])].sort((a, b) => new Date(b.paid_at).getTime() - new Date(a.paid_at).getTime()).slice(0, 5)\n}\n\nasync function load() {
+function recentPayments(row: any) {
+  return [...(row.creditor_payments ?? [])].sort((a, b) => new Date(b.paid_at).getTime() - new Date(a.paid_at).getTime()).slice(0, 5)
+}
+
+async function load() {
   const { data, error: queryError } = await supabase
     .from('creditors')
     .select('*,creditor_payments(id,amount,paid_at,note)')

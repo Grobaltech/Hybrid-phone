@@ -1,3 +1,5 @@
+export const DEFAULT_CURRENCY = 'UGX'
+
 export type Role = 'admin' | 'manager' | 'cashier'
 
 export type Cap = 'view_costs'

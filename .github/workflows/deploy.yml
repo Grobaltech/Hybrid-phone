@@ -36,15 +36,13 @@ jobs:
       - run: npm install --no-audit --no-fund
       - name: Set Worker secrets
         run: |
-          printf '%s' "$SUPABASE_URL" | npx wrangler secret put SUPABASE_URL --name hybrid-shop-api
-          printf '%s' "$SUPABASE_SERVICE_ROLE_KEY" | npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY --name hybrid-shop-api
-          printf '%s' "$ALLOWED_ORIGIN" | npx wrangler secret put ALLOWED_ORIGIN --name hybrid-shop-api
+          printf '%s' "$SUPABASE_URL" | npx wrangler secret put SUPABASE_URL --name hybrid-phone
+          printf '%s' "$SUPABASE_SERVICE_ROLE_KEY" | npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY --name hybrid-phone
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          ALLOWED_ORIGIN: ${{ vars.ALLOWED_ORIGIN }}
       - name: Deploy Worker
         uses: cloudflare/wrangler-action@v3
         with:

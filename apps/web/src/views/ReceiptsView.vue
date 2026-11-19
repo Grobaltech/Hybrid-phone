@@ -11,7 +11,7 @@ const router = useRouter()
 onMounted(async () => {
   const { data, error: queryError } = await supabase
     .from('sales')
-    .select('id,receipt_no,customer_id,grand_total,payment_method,created_at')
+    .select('id,receipt_no,customer_id,grand_total,payment_method,created_at,customers(name)')
     .order('created_at', { ascending: false })
     .limit(250)
 
@@ -45,7 +45,7 @@ onMounted(async () => {
         <thead>
           <tr>
             <th>Receipt</th>
-            <th>Customer ID</th>
+            <th>Customer</th>
             <th>Total</th>
             <th>Payment</th>
             <th>Date</th>
@@ -57,12 +57,12 @@ onMounted(async () => {
             v-for="r in rows.filter(
               (x) =>
                 String(x.receipt_no ?? x.id).toLowerCase().includes(q.toLowerCase()) ||
-                String(x.customer_id ?? '').includes(q),
+                String(x.customers?.name ?? '').toLowerCase().includes(q) || String(x.customer_id ?? '').includes(q),
             )"
             :key="r.id"
           >
             <td>{{ r.receipt_no ?? r.id }}</td>
-            <td>{{ r.customer_id ?? 'Walk-in' }}</td>
+            <td>{{ r.customers?.name ?? 'Walk-in' }}</td>
             <td>UGX {{ Number(r.grand_total).toLocaleString() }}</td>
             <td>{{ r.payment_method }}</td>
             <td>{{ new Date(r.created_at).toLocaleString() }}</td>

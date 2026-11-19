@@ -15,7 +15,7 @@ const latestPayments = computed(() => rows.value.flatMap(creditor =>
   (creditor.creditor_payments ?? []).map((payment: any) => ({ ...payment, creditorName: creditor.name, creditorId: creditor.id }))
 ).sort((a, b) => new Date(b.paid_at).getTime() - new Date(a.paid_at).getTime()).slice(0, 50))
 
-async function load() {
+function recentPayments(row: any) {\n  return [...(row.creditor_payments ?? [])].sort((a, b) => new Date(b.paid_at).getTime() - new Date(a.paid_at).getTime()).slice(0, 5)\n}\n\nasync function load() {
   const { data, error: queryError } = await supabase
     .from('creditors')
     .select('*,creditor_payments(id,amount,paid_at,note)')
@@ -97,7 +97,7 @@ onMounted(load)
               <td colspan="7">
                 <div v-if="row.creditor_payments?.length" class="table-scroll">
                   <table><thead><tr><th>Date</th><th>Amount</th><th>Note</th></tr></thead>
-                    <tbody><tr v-for="payment in row.creditor_payments.slice().sort((a:any,b:any)=>new Date(b.paid_at).getTime()-new Date(a.paid_at).getTime()).slice(0,5)" :key="payment.id">
+                    <tbody><tr v-for="payment in recentPayments(row)" :key="payment.id">
                       <td>{{ new Date(payment.paid_at).toLocaleString() }}</td>
                       <td>UGX {{ Number(payment.amount).toLocaleString() }}</td>
                       <td>{{ payment.note ?? '—' }}</td>

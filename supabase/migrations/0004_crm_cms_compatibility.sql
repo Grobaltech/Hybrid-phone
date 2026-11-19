@@ -1,0 +1,2 @@
+-- Compatibility migration retained to preserve the original migration sequence.
+-- CRM and CMS tables and policies are created in 0006_crm_cms.sql.

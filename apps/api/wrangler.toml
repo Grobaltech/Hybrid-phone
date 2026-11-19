@@ -3,7 +3,10 @@ main = "src/index.ts"
 compatibility_date = "2025-01-15"
 compatibility_flags = ["nodejs_compat"]
 
-# Set these as Worker secrets in Cloudflare (or through the deploy workflow):
+# Public frontend origin allowed to call this API Worker.
+[vars]
+ALLOWED_ORIGIN = "https://hybrid-shop.pages.dev"
+
+# Keep these as Cloudflare Worker secrets; never put them in [vars].
 # SUPABASE_URL
 # SUPABASE_SERVICE_ROLE_KEY
-# ALLOWED_ORIGIN (for example https://hybrid-shop.pages.dev)

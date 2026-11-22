@@ -12,11 +12,16 @@ const branchRequired=(role:string)=>role==='manager'||role==='cashier'
 r.get('/',async c=>{
  const client=db(c.env)
  const [{data,error},{data:branches, error:branchError}]=await Promise.all([
-  client.from('profiles').select('id,username,role,phone,email,photo_path,id_photo_path,cv_path,disabled,created_at,branch_id').order('created_at',{ascending:false}),
+  client.from('profiles').select('id,username,role,phone,email,photo_path,id_photo_path,cv_path,disabled,created_at,branch_id,shop_id').order('created_at',{ascending:false}),
   client.from('branches').select('id,name,status').eq('status','active').order('name')
  ])
  if(error||branchError)return c.json({error:error?.message??branchError?.message},400)
- return c.json({users:data,branches:branches??[]})
+ const shopIds=[...new Set((data??[]).map(user=>user.shop_id).filter(Boolean))]
+ const {data:shops,error:shopError}=shopIds.length?await client.from('shops').select('id,director_id').in('id',shopIds):{data:[],error:null}
+ if(shopError)return c.json({error:shopError.message},400)
+ const directorIds=new Set((shops??[]).map(shop=>shop.director_id).filter(Boolean))
+ const users=(data??[]).map(user=>({...user,is_director:directorIds.has(user.id)}))
+ return c.json({users,branches:branches??[]})
 })
 r.get('/branches',async c=>{
  const {data,error}=await db(c.env).from('branches').select('id,name,status').eq('status','active').order('name')

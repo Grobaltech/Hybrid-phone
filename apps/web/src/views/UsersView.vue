@@ -5,7 +5,7 @@ import {PAGES} from '@hybrid/shared'
 import {supabase} from '@/lib/supabase'
 
 type Branch={id:string;name:string;status:string}
-type User={id:string;username:string;role:string;phone:string|null;email:string|null;disabled:boolean;branch_id:string|null;photo_path?:string|null;id_photo_path?:string|null;cv_path?:string|null;created_at:string}
+type User={id:string;username:string;role:string;is_director?:boolean;phone:string|null;email:string|null;disabled:boolean;branch_id:string|null;photo_path?:string|null;id_photo_path?:string|null;cv_path?:string|null;created_at:string}
 const users=ref<User[]>([]),branches=ref<Branch[]>([]),error=ref(''),busy=ref(false),uploading=ref(false),show=ref(false),username=ref(''),password=ref(''),role=ref('cashier'),phone=ref(''),email=ref(''),branchId=ref(''),selected=ref<User|null>(null),caps=ref<string[]>([]),overrides=ref<Record<string,boolean>>({})
 const needsBranch=(value:string)=>value==='manager'||value==='cashier'
 async function load(){try{const r=await api<{users:User[];branches:Branch[]}>('/v1/users');users.value=r.users;branches.value=r.branches??[]}catch(e:any){error.value=e.message}}
@@ -28,7 +28,7 @@ onMounted(load)
  <div class="table-scroll"><table><thead><tr><th>Username</th><th>Contact</th><th>Role</th><th>Branch</th><th>Status</th><th>Created</th><th>Action</th></tr></thead>
  <tbody><tr v-for="u in users" :key="u.id">
  <td>{{u.username}}</td><td>{{u.phone??'—'}}<br>{{u.email??''}}</td>
- <td><select :value="u.role" class="control" @change="changeRole(u,$event)"><option value="admin">Admin</option><option value="manager">Manager</option><option value="cashier">Cashier</option></select></td>
+ <td><span v-if="u.is_director" class="role-label">Director</span><select v-else :value="u.role" class="control" @change="changeRole(u,$event)"><option value="admin">Admin</option><option value="manager">Manager</option><option value="cashier">Cashier</option></select></td>
  <td><select :value="u.branch_id??''" class="control" :required="needsBranch(u.role)" @change="changeBranch(u,$event)"><option value="">{{needsBranch(u.role)?'Select branch':'No branch'}}</option><option v-for="b in branches" :key="b.id" :value="b.id">{{b.name}}</option></select></td>
  <td>{{u.disabled?'Disabled':'Active'}}</td><td>{{new Date(u.created_at).toLocaleDateString()}}</td>
  <td class="actions"><button class="link" @click="editAccess(u)">Access</button><button class="link" @click="toggle(u)">{{u.disabled?'Enable':'Disable'}}</button></td>
